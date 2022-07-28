@@ -10,28 +10,28 @@ import { TasksService } from './tasks.service';
 export class TasksController {
     constructor(private tasksService: TasksService) { }
 
-    @Get()
+    @Get()                                                               // get all tasks
     getTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
         return this.tasksService.getTasks(filterDto);
     }
 
-    @Get('/:id')
+    @Get('/:id')                                                        // get task by id
     getTaskById(@Param('id') id: string): Promise<Task>{
         return this.tasksService.getTaskById(id);
     }
 
-
-    @Post()
+ 
+    @Post()                                                           // create task
     createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task>  {
         return this.tasksService.createTask(createTaskDto);
     }
 
-    @Delete('/:id')
+    @Delete('/:id')                                                    // delete task
     deleteTask(@Param('id') id: string): Promise<void> {
         return this.tasksService.deleteTask(id);
     }
 
-    @Patch('/:id/status')
+    @Patch('/:id/status')                                               // update task status
     updateTaskStatus(@Param('id') id: string, @Body() updateTaskStatusDto: UpdateTaskStatusDto): Promise<Task> {
         const {status} = updateTaskStatusDto;
         return this.tasksService.updateTaskStatus(id, status);
