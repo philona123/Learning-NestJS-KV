@@ -71,4 +71,10 @@ export class TasksService {
         return task;
     }
 
+    async getUser(task: Task): Promise<User> {
+        const tsk = (await this.tasksRepository.findOne({where: {id: task.id}, relations: ['user']})) as Task;
+        console.log(tsk);
+        return tsk.user;
+    }
+
 }

@@ -4,6 +4,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { Task } from './task.entity';
 import { TasksController } from './tasks.controller';
 import { TasksRepository } from './tasks.repository';
+import { TasksResolver } from './tasks.resolver';
 import { TasksService } from './tasks.service';
 
 @Module({
@@ -12,6 +13,6 @@ import { TasksService } from './tasks.service';
     AuthModule
   ],
   controllers: [TasksController],
-  providers: [TasksService],
+  providers: [TasksService, TasksResolver],
 })
 export class TasksModule {}
