@@ -5,18 +5,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ApolloDriverConfig, ApolloDriver } from '@nestjs/apollo';
 import { join } from 'path';
+import { AuthService } from './auth/auth.service';
+import { createUsersLoader } from './tasks/tasks.loader';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      typePaths: ['./**/*.graphql'],
-      definitions: {
-        path: join(process.cwd(), 'src/graphql.ts'),
-        outputAs: 'class',
-      },
-      debug:true,
-      playground:true,
+      inject: [AuthService],
+      imports: [AuthModule],
+      useFactory: (authService: AuthService) => ({
+        context: () => ({
+          randomValue: Math.random(),
+          usersLoader: createUsersLoader(authService),
+
+        }),
+        typePaths: ['./**/*.graphql'],
+        definitions: {
+          path: join(process.cwd(), 'src/graphql.ts'),
+          outputAs: 'class',
+        },
+        debug: true,
+        playground: true,
+
+      }),
     }),
     TasksModule,
     TypeOrmModule.forRoot({
@@ -31,4 +43,4 @@ import { join } from 'path';
     }),
     AuthModule,],
 })
-export class AppModule {}
+export class AppModule { }

@@ -36,6 +36,10 @@ export class AuthService {
         
     }
 
+    async getUsersByIds(ids: string[]): Promise<User[]> {
+        return this.usersRepository.findByIds(ids);
+    }
+
     async signIn(authCredentialsDto: AuthCredentialsDto): Promise<{accessToken: string}> {
         const {username, password} = authCredentialsDto;
         const user = await this.usersRepository.findOne({username});

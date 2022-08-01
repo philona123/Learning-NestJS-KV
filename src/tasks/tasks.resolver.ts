@@ -1,6 +1,7 @@
 import { UseGuards } from "@nestjs/common";
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Context, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { AuthGuard } from "@nestjs/passport";
+import DataLoader from "dataloader";
 import { GetUser } from "src/auth/get-user.decorator";
 import { User } from "src/auth/user.entity";
 import { GqlAuthGuard } from "./auth.guard";
@@ -42,7 +43,10 @@ export class TasksResolver {
     }
 
     @ResolveField('user', () => User)
-    async getUser(@Parent() task: Task) {
-        return this.tasksService.getUser(task);
+    async getUser(@Parent() task: Task,
+    @Context('usersLoader') usersLoader: DataLoader<string, User>,
+    ) {
+      const { userId } = task;
+      return usersLoader.load(userId);
     }
 }
